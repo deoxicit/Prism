@@ -1,3 +1,0 @@
-[submodule "wagmi"]
-	path = wagmi
-	url = https://github.com/wagmi-dev/wagmi.git
