@@ -1,3 +1,3 @@
-[submodule "eduPumpContract/lib/forge-std"]
-	path = eduPumpContract/lib/forge-std
-	url = https://github.com/foundry-rs/forge-std
+[submodule "wagmi"]
+	path = wagmi
+	url = https://github.com/wagmi-dev/wagmi.git
