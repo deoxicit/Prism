@@ -13,7 +13,7 @@ remappings = [
 opencampuscodex = "https://rpc.open-campus-codex.gelato.digital/"
 
 [etherscan]
-opencampuscodex = { key = "${BLOCKSCOUT_API_KEY}", url = "https://opencampus-codex.blockscout.com/api" }
+opencampuscodex = { key = "", url = "https://opencampus-codex.blockscout.com/api" }
 
 [profile.chains]
 opencampuscodex = 656476
