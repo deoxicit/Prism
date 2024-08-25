@@ -1,12 +1,12 @@
 import { defineConfig } from '@wagmi/cli'
-import { hardhat, react } from '@wagmi/cli/plugins'
+import { foundry, react } from '@wagmi/cli/plugins'
 
 export default defineConfig({
   out: 'src/generated.ts',
   contracts: [],
   plugins: [
-    hardhat({
-      project: '../',
+    foundry({
+      project: '../PrismContract',
       deployments: {
         EduPumpToken: {
           // You'll update this address after deploying your contract
