@@ -1,0 +1,3 @@
+[submodule "PrismContract/lib/forge-std"]
+	path = PrismContract/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
