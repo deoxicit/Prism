@@ -10,7 +10,7 @@ export default defineConfig({
       deployments: {
         EduPumpToken: {
           // You'll update this address after deploying your contract
-          12345: '0x...',  // Replace 12345 with your Arbitrum Orbit chain ID
+          0xA045C: '0x...',  // Replace 12345 with your Arbitrum Orbit chain ID
         },
       },
     }),
