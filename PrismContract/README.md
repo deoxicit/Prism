@@ -8,6 +8,6 @@
 |              --rpc-url https://rpc.open-campus-codex.gelato.digital \
 |              --verifier blockscout \
 |              --verifier-url 'https://opencampus-codex.blockscout.com/api/' \
-|              0x907375B5346ccD9B5A9535BF2C2DD826Dc206c67 \
+|              {contract_address} \
 |            --compiler-version v0.8.26 \
 |              src/Prism.sol:Prism
