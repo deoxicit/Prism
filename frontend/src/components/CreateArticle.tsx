@@ -8,7 +8,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { useAccount } from 'wagmi';
-import { prismAbi } from '../generated';
+import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;

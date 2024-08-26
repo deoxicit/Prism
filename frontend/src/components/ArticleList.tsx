@@ -4,7 +4,7 @@ import { formatEther } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useAccount } from 'wagmi';
-import { prismAbi } from '../generated';
+import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 

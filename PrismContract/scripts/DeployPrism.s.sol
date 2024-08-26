@@ -8,13 +8,14 @@ contract DeployPrism is Script {
     function setUp() public {}
 
     function run() public {
-        uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
+        bytes32 privateKeyBytes = vm.envBytes32("PRIVATE_KEY");
+        uint256 deployerPrivateKey = uint256(privateKeyBytes);
         vm.startBroadcast(deployerPrivateKey);
 
-        address someAddress = address(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4);
+        address someAddress = address(0x2Baffb43dcD57907dD6408E1afB8b7b09548bCcc);
         Prism prism = new Prism(someAddress);
 
-        console.log("PostManager deployed to:", address(prism));
+        console.log("Prism deployed to:", address(prism));
 
         vm.stopBroadcast();
     }
