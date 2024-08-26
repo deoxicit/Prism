@@ -5,30 +5,30 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useAccount } from 'wagmi';
 import { prismAbi } from '../generated';
+import { Loader2 } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
-type ArticleData = readonly [string, `0x${string}`, bigint, bigint, bigint];
+type ArticleData = {
+  title: string;
+  originalAuthor: `0x${string}`;
+  timestamp: bigint;
+  mintPrice: bigint;
+  parentTokenId: bigint;
+};
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 
 const ArticleList: React.FC = () => {
   const { address } = useAccount();
+  const { toast } = useToast();
 
   const { data: articleData, isLoading: isLoadingArticles, error: readError } = useReadContracts({
-    contracts: [
-      {
-        address: CONTRACT_ADDRESS,
-        abi: prismAbi,
-        functionName: 'articles',
-        args: [BigInt(0)],
-      },
-      {
-        address: CONTRACT_ADDRESS,
-        abi: prismAbi,
-        functionName: 'articles',
-        args: [BigInt(1)],
-      },
-      // Add more article reads as needed
-    ],
+    contracts: Array.from({ length: 10 }, (_, i) => ({
+      address: CONTRACT_ADDRESS,
+      abi: prismAbi,
+      functionName: 'articles',
+      args: [BigInt(i)],
+    })),
   });
 
   const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
@@ -38,10 +38,16 @@ const ArticleList: React.FC = () => {
   });
 
   const handleMint = (tokenId: number) => {
-    if (!address) return;
+    if (!address) {
+      toast({
+        title: "Wallet not connected",
+        description: "Please connect your wallet to mint an article.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
-      console.log('Minting article:', tokenId);
       writeContract({
         address: CONTRACT_ADDRESS,
         abi: prismAbi,
@@ -51,64 +57,89 @@ const ArticleList: React.FC = () => {
       });
     } catch (error) {
       console.error('Error in handleMint:', error);
+      toast({
+        title: "Error",
+        description: "An error occurred while minting the article. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
+  React.useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: "Article Minted",
+        description: "You have successfully minted the article!",
+      });
+    }
+  }, [isSuccess, toast]);
+
   if (readError) {
     console.error('Read Contracts Error:', readError);
-  }
-
-  if (writeError) {
-    console.error('Write Contract Error:', writeError);
+    return <div className="text-center text-red-600">Error loading articles. Please try again later.</div>;
   }
 
   if (isLoadingArticles) {
-    return <p>Loading articles...</p>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {articleData?.map((article, index) => {
-        if (!article.result) return null;
+        if (!article.result || !Array.isArray(article.result) || article.result.length !== 5) return null;
         
-        const [title, originalAuthor, timestamp, mintPrice, parentTokenId] = article.result as ArticleData;
+        const [title, originalAuthor, timestamp, mintPrice, parentTokenId] = article.result as unknown as [string, `0x${string}`, bigint, bigint, bigint];
+        
+        const articleData: ArticleData = {
+          title,
+          originalAuthor,
+          timestamp,
+          mintPrice,
+          parentTokenId
+        };
         
         return (
-          <Card key={index}>
+          <Card key={index} className="flex flex-col">
             <CardHeader>
-              <CardTitle>{title}</CardTitle>
+              <CardTitle className="text-xl font-semibold">{articleData.title}</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Author: {originalAuthor}
+            <CardContent className="flex-grow">
+              <p className="text-sm text-muted-foreground mb-2">
+                By: {articleData.originalAuthor.slice(0, 6)}...{articleData.originalAuthor.slice(-4)}
               </p>
-              <p className="text-sm text-gray-600">
-                Mint Price: {formatEther(mintPrice)} ETH
+              <p className="text-sm text-muted-foreground mb-2">
+                Mint Price: {formatEther(articleData.mintPrice)} ETH
               </p>
-              <p className="text-sm text-gray-600">
-                Created: {new Date(Number(timestamp) * 1000).toLocaleString()}
+              <p className="text-sm text-muted-foreground mb-2">
+                Created: {new Date(Number(articleData.timestamp) * 1000).toLocaleDateString()}
               </p>
-              <p className="text-sm text-gray-600">
-                Parent Token ID: {parentTokenId.toString()}
+              <p className="text-sm text-muted-foreground">
+                Parent Token ID: {articleData.parentTokenId.toString()}
               </p>
             </CardContent>
             <CardFooter>
               <Button 
                 onClick={() => handleMint(index)} 
                 disabled={isPending || isConfirming || !address}
+                className="w-full"
               >
-                {isPending ? 'Minting...' : isConfirming ? 'Confirming...' : 'Mint Article'}
+                {isPending || isConfirming ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isPending ? 'Minting...' : 'Confirming...'}
+                  </>
+                ) : (
+                  'Mint Article'
+                )}
               </Button>
             </CardFooter>
           </Card>
         );
       })}
-      {isSuccess && (
-        <p className="text-green-600">Article minted successfully!</p>
-      )}
-      {(readError || writeError) && (
-        <p className="text-red-600">Error occurred. Please check console for details.</p>
-      )}
     </div>
   );
 };
