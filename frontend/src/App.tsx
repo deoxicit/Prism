@@ -1,6 +1,5 @@
 import React, { ErrorInfo, ReactNode } from 'react';
 import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Layout from './components/Layout';
 import CreateArticle from './components/CreateArticle';
 import ArticleList from './components/ArticleList';
@@ -34,30 +33,21 @@ class ErrorBoundary extends React.Component<
 
 const App: React.FC = () => {
   console.log('Rendering App component');
-  const { isConnected } = useAccount();
-  
   return (
     <ErrorBoundary>
       <Layout>
-        <div className="flex justify-end mb-4">
-          <ConnectButton />
-        </div>
-        {isConnected ? (
-          <Tabs defaultValue="create" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="create">Create Article</TabsTrigger>
-              <TabsTrigger value="browse">Browse Articles</TabsTrigger>
-            </TabsList>
-            <TabsContent value="create">
-              <CreateArticle />
-            </TabsContent>
-            <TabsContent value="browse">
-              <ArticleList />
-            </TabsContent>
-          </Tabs>
-        ) : (
-          <p>Please connect your wallet to use the application.</p>
-        )}
+        <Tabs defaultValue="create" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="create">Create Article</TabsTrigger>
+            <TabsTrigger value="browse">Browse Articles</TabsTrigger>
+          </TabsList>
+          <TabsContent value="create">
+            <CreateArticle />
+          </TabsContent>
+          <TabsContent value="browse">
+            <ArticleList />
+          </TabsContent>
+        </Tabs>
       </Layout>
     </ErrorBoundary>
   );

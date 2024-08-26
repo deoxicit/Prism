@@ -10,13 +10,19 @@ import { useToast } from '@/components/ui/use-toast';
 import { useAccount } from 'wagmi';
 import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
+import { PinataSDK } from "pinata";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
+const PINATA_JWT = import.meta.env.VITE_PINATA_JWT as string;
+const PINATA_GATEWAY = import.meta.env.VITE_PINATA_GATEWAY as string;
+
+const pinata = new PinataSDK({ pinataJwt: PINATA_JWT, pinataGateway: PINATA_GATEWAY });
 
 const CreateArticle: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [mintPrice, setMintPrice] = useState<string>('');
+  const [tags, setTags] = useState<string>('');
   const { address } = useAccount();
   const { toast } = useToast();
 
@@ -25,6 +31,19 @@ const CreateArticle: React.FC = () => {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
+
+  const uploadToPinata = async (content: string, title: string): Promise<string> => {
+    try {
+      const upload = await pinata.upload.json({
+        title: title,
+        content: content,
+      });
+      return upload.ipfsHash;
+    } catch (error) {
+      console.error('Error uploading to Pinata:', error);
+      throw new Error('Failed to upload content to IPFS');
+    }
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,11 +57,15 @@ const CreateArticle: React.FC = () => {
     }
 
     try {
+      // Upload content to IPFS using Pinata SDK
+      const ipfsHash = await uploadToPinata(content, title);
+
+      // Create article with IPFS hash instead of full content
       writeContract({
         address: CONTRACT_ADDRESS,
         abi: prismAbi,
         functionName: 'createArticle',
-        args: [title, content, parseEther(mintPrice)],
+        args: [title, ipfsHash, parseEther(mintPrice), tags.split(',').map(tag => tag.trim())],
       });
     } catch (error) {
       console.error('Error in handleSubmit:', error);
@@ -63,6 +86,7 @@ const CreateArticle: React.FC = () => {
       setTitle('');
       setContent('');
       setMintPrice('');
+      setTags('');
     }
   }, [isSuccess, toast]);
 
@@ -105,6 +129,15 @@ const CreateArticle: React.FC = () => {
               value={mintPrice}
               onChange={(e) => setMintPrice(e.target.value)}
               required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="tags">Tags (comma-separated)</Label>
+            <Input
+              id="tags"
+              placeholder="Enter tags, separated by commas"
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
             />
           </div>
           <Button 

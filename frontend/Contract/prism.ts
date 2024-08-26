@@ -1459,6 +1459,7 @@ export const prismAbi = [
       { name: 'title', internalType: 'string', type: 'string' },
       { name: 'tokenURI', internalType: 'string', type: 'string' },
       { name: 'mintPrice', internalType: 'uint256', type: 'uint256' },
+      { name: 'tags', internalType: 'string[]', type: 'string[]' },
     ],
     name: 'createArticle',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
@@ -1486,9 +1487,17 @@ export const prismAbi = [
           { name: 'timestamp', internalType: 'uint256', type: 'uint256' },
           { name: 'mintPrice', internalType: 'uint256', type: 'uint256' },
           { name: 'parentTokenId', internalType: 'uint256', type: 'uint256' },
+          { name: 'tags', internalType: 'string[]', type: 'string[]' },
         ],
       },
     ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [{ name: 'tag', internalType: 'string', type: 'string' }],
+    name: 'getArticlesByTag',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
     stateMutability: 'view',
   },
   {
@@ -1506,6 +1515,20 @@ export const prismAbi = [
     ],
     name: 'isApprovedForAll',
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'listAllArticles',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    inputs: [],
+    name: 'listAllTags',
+    outputs: [{ name: '', internalType: 'string[]', type: 'string[]' }],
     stateMutability: 'view',
   },
   {
@@ -1624,6 +1647,7 @@ export const prismAbi = [
       { name: 'newTitle', internalType: 'string', type: 'string' },
       { name: 'newTokenURI', internalType: 'string', type: 'string' },
       { name: 'newMintPrice', internalType: 'uint256', type: 'uint256' },
+      { name: 'newTags', internalType: 'string[]', type: 'string[]' },
     ],
     name: 'updateArticle',
     outputs: [],
@@ -1691,6 +1715,12 @@ export const prismAbi = [
         indexed: true,
       },
       { name: 'title', internalType: 'string', type: 'string', indexed: false },
+      {
+        name: 'tags',
+        internalType: 'string[]',
+        type: 'string[]',
+        indexed: false,
+      },
     ],
     name: 'ArticleCreated',
   },
@@ -1769,6 +1799,25 @@ export const prismAbi = [
       },
     ],
     name: 'OwnershipTransferred',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'tokenId',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'newTags',
+        internalType: 'string[]',
+        type: 'string[]',
+        indexed: false,
+      },
+    ],
+    name: 'TagsUpdated',
   },
   {
     type: 'event',
@@ -3127,6 +3176,13 @@ export const useReadPrismGetArticle = /*#__PURE__*/ createUseReadContract({
 })
 
 /**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link prismAbi}__ and `functionName` set to `"getArticlesByTag"`
+ */
+export const useReadPrismGetArticlesByTag = /*#__PURE__*/ createUseReadContract(
+  { abi: prismAbi, functionName: 'getArticlesByTag' },
+)
+
+/**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link prismAbi}__ and `functionName` set to `"getMintingChain"`
  */
 export const useReadPrismGetMintingChain = /*#__PURE__*/ createUseReadContract({
@@ -3140,6 +3196,22 @@ export const useReadPrismGetMintingChain = /*#__PURE__*/ createUseReadContract({
 export const useReadPrismIsApprovedForAll = /*#__PURE__*/ createUseReadContract(
   { abi: prismAbi, functionName: 'isApprovedForAll' },
 )
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link prismAbi}__ and `functionName` set to `"listAllArticles"`
+ */
+export const useReadPrismListAllArticles = /*#__PURE__*/ createUseReadContract({
+  abi: prismAbi,
+  functionName: 'listAllArticles',
+})
+
+/**
+ * Wraps __{@link useReadContract}__ with `abi` set to __{@link prismAbi}__ and `functionName` set to `"listAllTags"`
+ */
+export const useReadPrismListAllTags = /*#__PURE__*/ createUseReadContract({
+  abi: prismAbi,
+  functionName: 'listAllTags',
+})
 
 /**
  * Wraps __{@link useReadContract}__ with `abi` set to __{@link prismAbi}__ and `functionName` set to `"name"`
@@ -3428,6 +3500,15 @@ export const useWatchPrismOwnershipTransferredEvent =
   /*#__PURE__*/ createUseWatchContractEvent({
     abi: prismAbi,
     eventName: 'OwnershipTransferred',
+  })
+
+/**
+ * Wraps __{@link useWatchContractEvent}__ with `abi` set to __{@link prismAbi}__ and `eventName` set to `"TagsUpdated"`
+ */
+export const useWatchPrismTagsUpdatedEvent =
+  /*#__PURE__*/ createUseWatchContractEvent({
+    abi: prismAbi,
+    eventName: 'TagsUpdated',
   })
 
 /**

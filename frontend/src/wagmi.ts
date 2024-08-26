@@ -18,7 +18,7 @@ export const config = createConfig({
   connectors: [
     injected(),
     coinbaseWallet(),
-    walletConnect({ projectId: import.meta.env.VITE_WC_PROJECT_ID }),
+    walletConnect({ projectId: 'f20bb281737292196e8908bbf250c37e' }),
   ],
   transports: {
     [openCampusCodex.id]: http('https://rpc.open-campus-codex.gelato.digital/'),
