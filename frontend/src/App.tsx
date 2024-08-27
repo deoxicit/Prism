@@ -1,9 +1,9 @@
 import React, { ErrorInfo, ReactNode } from 'react';
-import { useAccount } from 'wagmi';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import CreateArticle from './components/CreateArticle';
 import ArticleList from './components/ArticleList';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ArticleDetailPage from './components/ArticleDetailPage';
 
 class ErrorBoundary extends React.Component<
   { children: ReactNode },
@@ -35,20 +35,16 @@ const App: React.FC = () => {
   console.log('Rendering App component');
   return (
     <ErrorBoundary>
-      <Layout>
-        <Tabs defaultValue="create" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="create">Create Article</TabsTrigger>
-            <TabsTrigger value="browse">Browse Articles</TabsTrigger>
-          </TabsList>
-          <TabsContent value="create">
-            <CreateArticle />
-          </TabsContent>
-          <TabsContent value="browse">
-            <ArticleList />
-          </TabsContent>
-        </Tabs>
-      </Layout>
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<ArticleList />} />
+            <Route path="/articles" element={<ArticleList />} />
+            <Route path="/article/:tokenId" element={<ArticleDetailPage />} />
+            <Route path="/create" element={<CreateArticle />} />
+          </Routes>
+        </Layout>
+      </Router>
     </ErrorBoundary>
   );
 };

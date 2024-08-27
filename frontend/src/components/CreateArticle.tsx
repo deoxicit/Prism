@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { useAccount } from 'wagmi';
 import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { PinataSDK } from "pinata";
+import { uploadToPinata } from '../utils/pinataUtil'; 
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT as string;
@@ -23,6 +24,8 @@ const CreateArticle: React.FC = () => {
   const [content, setContent] = useState<string>('');
   const [mintPrice, setMintPrice] = useState<string>('');
   const [tags, setTags] = useState<string>('');
+  const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { address } = useAccount();
   const { toast } = useToast();
 
@@ -32,16 +35,32 @@ const CreateArticle: React.FC = () => {
     hash,
   });
 
-  const uploadToPinata = async (content: string, title: string): Promise<string> => {
+  const uploadToPinata = async (content: string, title: string, image: File | null): Promise<string> => {
     try {
-      const upload = await pinata.upload.json({
+      let imageHash = '';
+      if (image) {
+        const imageUpload = await pinata.upload.file(image);
+        imageHash = imageUpload.IpfsHash;
+      }
+
+      const contentUpload = await pinata.upload.json({
         title: title,
         content: content,
+        backgroundImageHash: imageHash,
       });
-      return upload.ipfsHash;
+
+      return contentUpload.IpfsHash;
     } catch (error) {
       console.error('Error uploading to Pinata:', error);
       throw new Error('Failed to upload content to IPFS');
+    }
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setBackgroundImage(file);
+      setImagePreview(URL.createObjectURL(file));
     }
   };
 
@@ -57,10 +76,9 @@ const CreateArticle: React.FC = () => {
     }
 
     try {
-      // Upload content to IPFS using Pinata SDK
-      const ipfsHash = await uploadToPinata(content, title);
-
-      // Create article with IPFS hash instead of full content
+      // Upload content and image to IPFS using Pinata SDK
+      const ipfsHash = await uploadToPinata(content, title, backgroundImage);
+      // Create article with IPFS hash
       writeContract({
         address: CONTRACT_ADDRESS,
         abi: prismAbi,
@@ -87,6 +105,8 @@ const CreateArticle: React.FC = () => {
       setContent('');
       setMintPrice('');
       setTags('');
+      setBackgroundImage(null);
+      setImagePreview(null);
     }
   }, [isSuccess, toast]);
 
@@ -139,6 +159,20 @@ const CreateArticle: React.FC = () => {
               value={tags}
               onChange={(e) => setTags(e.target.value)}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="backgroundImage">Background Image</Label>
+            <Input
+              id="backgroundImage"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+            {imagePreview && (
+              <div className="mt-2">
+                <img src={imagePreview} alt="Background preview" className="max-w-full h-auto" />
+              </div>
+            )}
           </div>
           <Button 
             type="submit" 
