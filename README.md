@@ -1,29 +1,66 @@
-# PRISM
+# PRISM: Decentralized Content Ecosystem
 
-This project implements a system for creating, minting, updating, viewing, and transferring Article NFTs. It provides a set of smart contract functions to manage the lifecycle of digital articles as non-fungible tokens on the blockchain.
+PRISM is a revolutionary decentralized content ecosystem that leverages blockchain technology and NFTs to create a fair, transparent, and rewarding environment for content creators and consumers alike. By implementing a unique Multi-Level Marketing (MLM) structure, PRISM ensures that value is distributed across the network, incentivizing content creation, curation, and sharing.
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
+- [MLM Structure](#mlm-structure)
+- [Revenue Model](#revenue-model)
 - [Process Flow](#process-flow)
 - [Function Descriptions](#function-descriptions)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
-The [PRISM]("https://github.com/deoxicit/Prism") allows users to tokenize digital articles as NFTs, creating a verifiable chain of ownership and provenance for written content. This system enables content creators to monetize their work, readers to support authors directly, and a transparent ecosystem for digital publishing.
+PRISM allows users to tokenize digital articles as NFTs, creating a verifiable chain of ownership and provenance for written content. This system enables content creators to monetize their work, readers to support authors directly, and a transparent ecosystem for digital publishing. The innovative MLM structure encourages content sharing and curation, creating a self-sustaining content economy.
 
 ## Features
 
-- Create new Article NFTs
-- Mint new NFTs from existing articles
+- Create and mint Article NFTs
 - Update article content (for owners)
-- View article details
-- Examine the minting chain of an article
+- View article details and minting history
 - Transfer ownership of Article NFTs
+- Multi-level marketing structure for content sharing
+- Revenue sharing between platform, creators, and curators
+
+## MLM Structure
+
+PRISM implements a Multi-Level Marketing structure for content sharing and curation:
+
+1. **Level 0 (Original Creator)**: The original author of the content.
+2. **Level 1**: Users who directly mint or share content from the original creator.
+3. **Level 2**: Users who mint or share content from Level 1 users.
+4. **Level 3**: Users who mint or share content from Level 2 users.
+
+This structure can extend to multiple levels, with diminishing returns at each level to ensure sustainability.
+
+## Revenue Model
+
+PRISM's revenue model benefits both the platform and its users:
+
+### For Users:
+
+1. **Content Creators**: Earn revenue from initial sales and ongoing royalties from subsequent mints.
+2. **Curators**: Earn a percentage of sales when their shared content is minted by others.
+3. **Readers**: Potential to earn by identifying and sharing valuable content early.
+
+### For Platform:
+
+1. **Minting Fees**: A small fee is collected for each new NFT minted.
+2. **Transaction Fees**: A percentage of each sale or transfer is collected by the platform.
+3. **Premium Features**: Additional revenue from premium account features or services.
+
+### Revenue Distribution Example:
+
+When a new Article NFT is minted from an existing one:
+- 50% goes to the original creator
+- 30% is distributed among the levels in the MLM structure
+- 20% goes to the PRISM platform
+
+This model incentivizes quality content creation, active curation, and platform growth.
 
 ## Process Flow
 
