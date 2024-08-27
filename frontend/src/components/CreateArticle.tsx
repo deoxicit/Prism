@@ -11,7 +11,6 @@ import { useAccount } from 'wagmi';
 import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { PinataSDK } from "pinata";
-import { uploadToPinata } from '../utils/pinataUtil'; 
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT as string;
@@ -29,7 +28,7 @@ const CreateArticle: React.FC = () => {
   const { address } = useAccount();
   const { toast } = useToast();
 
-  const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
+  const { writeContract, data: hash, isPending } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,

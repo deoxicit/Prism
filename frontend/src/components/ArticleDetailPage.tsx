@@ -51,7 +51,7 @@ const ArticleDetailPage: React.FC = () => {
         args: [BigInt(tokenId!)],
     });
 
-    const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
+    const { writeContract, data: hash, isPending } = useWriteContract();
 
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
         hash,

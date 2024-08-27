@@ -40,7 +40,7 @@ const ArticleList: React.FC = () => {
     functionName: 'listAllArticles',
   });
 
-  const { writeContract, data: hash, isPending, error: writeError } = useWriteContract();
+  const { writeContract, data: hash, isPending } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
