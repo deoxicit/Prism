@@ -211,13 +211,6 @@ const ArticleCard: React.FC<{
             Tags: {tags.join(', ')}
           </p>
         </div>
-        <div className="mt-4">
-          {isLoadingContent ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <p className="text-sm">{content.slice(0, 150)}...</p>
-          )}
-        </div>
       </CardContent>
       <CardFooter>
         <div className="flex flex-row align-middle gap-5">

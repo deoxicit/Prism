@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { formatEther } from 'viem';
@@ -8,6 +8,7 @@ import { useAccount } from 'wagmi';
 import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import JoditEditor from "jodit-react";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 const PINATA_GATEWAY_TOKEN = import.meta.env.VITE_PINATA_GATEWAY_TOKEN as string;
@@ -56,6 +57,19 @@ const ArticleDetailPage: React.FC = () => {
     const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
         hash,
     });
+
+    const config = useMemo(() => ({
+        readonly: true,
+        toolbar: false,
+        showCharsCounter: false,
+        showWordsCounter: false,
+        showXPathInStatusbar: false,
+        width: '100%',
+        height: 'auto',
+        minHeight: 300,
+        buttons: [],
+        disablePlugins: 'draganddrop,dropImage,paste,paste-storage',
+    }), []);
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -176,9 +190,12 @@ const ArticleDetailPage: React.FC = () => {
                                 <Loader2 className="h-8 w-8 animate-spin" />
                             </div>
                         ) : (
-                            <div className="prose max-w-none">
-                                {content}
-                            </div>
+                            <JoditEditor
+                                value={content}
+                                config={config}
+                                onBlur={() => {}}
+                                onChange={() => {}}
+                            />
                         )}
                     </div>
                 </CardContent>

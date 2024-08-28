@@ -1,9 +1,8 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, FormEvent, ChangeEvent, useMemo } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
@@ -11,6 +10,7 @@ import { useAccount } from 'wagmi';
 import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { PinataSDK } from "pinata";
+import JoditEditor from "jodit-react";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT as string;
@@ -25,14 +25,21 @@ const CreateArticle: React.FC = () => {
   const [tags, setTags] = useState<string>('');
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { address } = useAccount();
   const { toast } = useToast();
 
-  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { writeContract, data: hash } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
+
+  const config = useMemo(() => ({
+    readonly: false,
+    placeholder: 'Start writing your article...',
+    height: 400,
+  }), []);
 
   const uploadToPinata = async (content: string, title: string, image: File | null): Promise<string> => {
     try {
@@ -74,6 +81,8 @@ const CreateArticle: React.FC = () => {
       return;
     }
 
+    setIsLoading(true);
+
     try {
       // Upload content and image to IPFS using Pinata SDK
       const ipfsHash = await uploadToPinata(content, title, backgroundImage);
@@ -91,6 +100,7 @@ const CreateArticle: React.FC = () => {
         description: "An error occurred while creating the article. Please try again.",
         variant: "destructive",
       });
+      setIsLoading(false);
     }
   };
 
@@ -106,6 +116,7 @@ const CreateArticle: React.FC = () => {
       setTags('');
       setBackgroundImage(null);
       setImagePreview(null);
+      setIsLoading(false);
     }
   }, [isSuccess, toast]);
 
@@ -129,13 +140,11 @@ const CreateArticle: React.FC = () => {
           </div>
           <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
-              placeholder="Write your article content here..."
+            <JoditEditor
               value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-              className="min-h-[200px]"
+              config={config}
+              onBlur={(newContent) => setContent(newContent)}
+              onChange={(newContent) => {}}
             />
           </div>
           <div className="space-y-2">
@@ -176,12 +185,12 @@ const CreateArticle: React.FC = () => {
           <Button 
             type="submit" 
             className="w-full"
-            disabled={isPending || isConfirming || !address}
+            disabled={isLoading || isConfirming || !address}
           >
-            {isPending || isConfirming ? (
+            {isLoading || isConfirming ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {isPending ? 'Creating...' : 'Confirming...'}
+                {isLoading ? 'Creating...' : 'Confirming...'}
               </>
             ) : (
               'Create Article'

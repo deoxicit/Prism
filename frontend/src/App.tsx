@@ -5,6 +5,7 @@ import CreateArticle from './components/CreateArticle';
 import ArticleList from './components/ArticleList';
 import ArticleDetailPage from './components/ArticleDetailPage';
 import About from './components/About';
+import { Toaster } from "@/components/ui/toaster";
 
 class ErrorBoundary extends React.Component<
   { children: ReactNode },
@@ -46,6 +47,7 @@ const App: React.FC = () => {
             <Route path="/about" element={<About />} />
           </Routes>
         </Layout>
+        <Toaster />
       </Router>
     </ErrorBoundary>
   );
