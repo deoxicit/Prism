@@ -144,7 +144,6 @@ const ArticleCard: React.FC<{
     args: [tokenId],
   });
 
-  const [content, setContent] = useState<string>('');
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string | null>(null);
   const [isLoadingContent, setIsLoadingContent] = useState<boolean>(false);
 
@@ -156,13 +155,11 @@ const ArticleCard: React.FC<{
           const url = `https://${PINATA_GATEWAY}/ipfs/${tokenURI}?pinataGatewayToken=${PINATA_GATEWAY_TOKEN}`;
           const response = await fetch(url);
           const jsonContent: ArticleContent = await response.json();
-          setContent(jsonContent.content);
           if (jsonContent.backgroundImageHash) {
             setBackgroundImageUrl(`https://${PINATA_GATEWAY}/ipfs/${jsonContent.backgroundImageHash}?pinataGatewayToken=${PINATA_GATEWAY_TOKEN}`);
           }
         } catch (error) {
           console.error('Error fetching content from IPFS:', error);
-          setContent('Error loading content');
         } finally {
           setIsLoadingContent(false);
         }
@@ -172,7 +169,7 @@ const ArticleCard: React.FC<{
     fetchContent();
   }, [tokenURI]);
 
-  if (isLoadingArticle || isLoadingTokenURI || isLoadingOwner || !article || !owner) {
+  if (isLoadingContent || isLoadingArticle || isLoadingTokenURI || isLoadingOwner || !article || !owner) {
     return (
       <Card className="flex flex-col h-48 justify-center items-center">
         <Loader2 className="h-8 w-8 animate-spin" />

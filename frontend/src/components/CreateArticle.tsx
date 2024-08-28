@@ -144,7 +144,7 @@ const CreateArticle: React.FC = () => {
               value={content}
               config={config}
               onBlur={(newContent) => setContent(newContent)}
-              onChange={(newContent) => {}}
+              onChange={() => {}}
             />
           </div>
           <div className="space-y-2">
