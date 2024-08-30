@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { prismAbi } from '../../Contract/prism';
-import { CONTRACT_ADDRESS, PINATA_GATEWAY, PINATA_GATEWAY_TOKEN } from '../constants';
-import { ArticleData, ArticleContent } from '../utils/types';
-import { formatAddress } from '../utils/formatAddress';
+import { prismAbi } from '../../../Contract/prism';
+import { CONTRACT_ADDRESS, PINATA_GATEWAY, PINATA_GATEWAY_TOKEN } from '../../constants';
+import { ArticleData, ArticleContent } from '../../utils/types';
+import { formatAddress } from '../../utils/formatAddress';
 
 interface ArticleCardProps {
   tokenId: bigint;

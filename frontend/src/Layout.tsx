@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MoonIcon, SunIcon } from 'lucide-react';
-import { useTheme } from '../ThemeProvider';
+import { useTheme } from './ThemeProvider';
 import { Button } from '@/components/ui/button';
 
 interface LayoutProps {

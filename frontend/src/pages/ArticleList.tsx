@@ -2,7 +2,7 @@ import React from 'react';
 import { useReadContract } from 'wagmi';
 import { Loader2 } from 'lucide-react';
 import { prismAbi } from '../../Contract/prism';
-import ArticleCard from './ArticleCard';
+import ArticleCard from '../components/Article/ArticleCard';
 import { useToast } from '@/components/ui/use-toast';
 import { useAccount } from 'wagmi';
 import { CONTRACT_ADDRESS } from '../constants';
