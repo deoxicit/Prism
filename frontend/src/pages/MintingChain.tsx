@@ -1,6 +1,6 @@
 import React from 'react';
 import { useReadContract } from 'wagmi';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { prismAbi } from '../../Contract/prism';
 import { useContractAddress } from '../utils/contracts';
