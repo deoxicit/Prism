@@ -1,7 +1,7 @@
 ## Foundry
 
 # Deploy contract 
-| forge create Prism --rpc-url opencampuscodex --private-key=private_Key --constructor-args "0x2Baffb43dcD57907dD6408E1afB8b7b09548bCcc"
+| forge create Prism --rpc-url opencampuscodex --private-key=private_Key --constructor-args "Your deployer address"
 
 # Verify Deployed Contract
  forge verify-contract \
