@@ -1,4 +1,4 @@
-# PRISM: Decentralized Content Ecosystem
+# PRISM: Decentralized Content Ecosystem V0.1
 
 PRISM is a revolutionary decentralized content ecosystem that leverages blockchain technology and NFTs to create a fair, transparent, and rewarding environment for content creators and consumers alike. By implementing a unique Multi-Level Marketing (MLM) structure, PRISM ensures that value is distributed across the network, incentivizing content creation, curation, and sharing.
 
