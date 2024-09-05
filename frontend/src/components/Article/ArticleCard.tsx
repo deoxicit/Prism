@@ -6,9 +6,10 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { prismAbi } from '../../../Contract/prism';
-import { CONTRACT_ADDRESS, PINATA_GATEWAY, PINATA_GATEWAY_TOKEN } from '../../constants';
+import { PINATA_GATEWAY, PINATA_GATEWAY_TOKEN } from '../../constants';
 import { ArticleData, ArticleContent } from '../../utils/types';
 import { formatAddress } from '../../utils/formatAddress';
+import { useContractAddress } from '../../utils/contracts';
 
 interface ArticleCardProps {
   tokenId: bigint;
@@ -19,23 +20,24 @@ interface ArticleCardProps {
 const ArticleCard: React.FC<ArticleCardProps> = ({ tokenId, address, toast }) => {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string | null>(null);
   const [isLoadingContent, setIsLoadingContent] = useState<boolean>(false);
+  const contractAddress = useContractAddress();
 
   const { data: article, isLoading: isLoadingArticle } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: prismAbi,
     functionName: 'getArticle',
     args: [tokenId],
   });
 
   const { data: owner, isLoading: isLoadingOwner } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: prismAbi,
     functionName: 'ownerOf',
     args: [tokenId],
   });
 
   const { data: tokenURI, isLoading: isLoadingTokenURI } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: prismAbi,
     functionName: 'tokenURI',
     args: [tokenId],
@@ -89,7 +91,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ tokenId, address, toast }) =>
     }
     try {
       writeContract({
-        address: CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: prismAbi,
         functionName: 'mintArticle',
         args: [tokenId],

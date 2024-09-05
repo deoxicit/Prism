@@ -3,23 +3,28 @@ import { useReadContract } from 'wagmi';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import { prismAbi } from '../../Contract/prism';
-
-const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
+import { useContractAddress } from '../utils/contracts';
 
 interface MintingChainProps {
     chain: bigint[];
 }
 
 const MintingChain: React.FC<MintingChainProps> = ({ chain }) => {
+    const contractAddress = useContractAddress();
+
+    console.log('MintingChain rendered with chain:', chain);
+    console.log('Contract address:', contractAddress);
+
+    if (!chain || chain.length === 0) {
+        return <Card className="w-full"><CardContent>No minting chain data available.</CardContent></Card>;
+    }
+
     return (
-        <Card className="w-full h-full overflow-auto">
-            <CardHeader>
-                <CardTitle>Minting Chain</CardTitle>
-            </CardHeader>
+        <Card className="w-full">
             <CardContent>
                 <div className="space-y-4">
                     {chain.map((tokenId, index) => (
-                        <ChainLink key={tokenId.toString()} tokenId={tokenId} index={index} />
+                        <ChainLink key={tokenId.toString()} tokenId={tokenId} index={index} contractAddress={contractAddress} />
                     ))}
                 </div>
             </CardContent>
@@ -30,15 +35,20 @@ const MintingChain: React.FC<MintingChainProps> = ({ chain }) => {
 interface ChainLinkProps {
     tokenId: bigint;
     index: number;
+    contractAddress: `0x${string}`;
 }
 
-const ChainLink: React.FC<ChainLinkProps> = ({ tokenId, index }) => {
-    const { data: article, isLoading } = useReadContract({
-        address: CONTRACT_ADDRESS,
+const ChainLink: React.FC<ChainLinkProps> = ({ tokenId, index, contractAddress }) => {
+    const { data: article, isLoading, error } = useReadContract({
+        address: contractAddress,
         abi: prismAbi,
         functionName: 'getArticle',
         args: [tokenId],
     });
+
+    console.log(`ChainLink ${index} rendered for tokenId:`, tokenId.toString());
+    console.log(`ChainLink ${index} data:`, article);
+    console.log(`ChainLink ${index} error:`, error);
 
     if (isLoading) {
         return (
@@ -49,8 +59,12 @@ const ChainLink: React.FC<ChainLinkProps> = ({ tokenId, index }) => {
         );
     }
 
+    if (error) {
+        return <div>Error loading article {tokenId.toString()}: {error.message}</div>;
+    }
+
     if (!article) {
-        return <div>Error loading article {tokenId.toString()}</div>;
+        return <div>No data for article {tokenId.toString()}</div>;
     }
 
     const { title, originalAuthor } = article as { title: string; originalAuthor: string };

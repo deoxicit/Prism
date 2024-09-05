@@ -11,8 +11,8 @@ import { prismAbi } from '../../Contract/prism';
 import { Loader2 } from 'lucide-react';
 import { PinataSDK } from "pinata";
 import JoditEditor from "jodit-react";
+import { useContractAddress } from '../utils/contracts';
 
-const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS as `0x${string}`;
 const PINATA_JWT = import.meta.env.VITE_PINATA_JWT as string;
 const PINATA_GATEWAY = import.meta.env.VITE_PINATA_GATEWAY as string;
 
@@ -28,13 +28,13 @@ const CreateArticle: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { address } = useAccount();
   const { toast } = useToast();
+  const contractAddress = useContractAddress();
 
   const { writeContract, data: hash } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash,
   });
-
   const config = useMemo(() => ({
     readonly: false,
     placeholder: 'Start writing your article...',
@@ -88,7 +88,7 @@ const CreateArticle: React.FC = () => {
       const ipfsHash = await uploadToPinata(content, title, backgroundImage);
       // Create article with IPFS hash
       writeContract({
-        address: CONTRACT_ADDRESS,
+        address: contractAddress,
         abi: prismAbi,
         functionName: 'createArticle',
         args: [title, ipfsHash, parseEther(mintPrice), tags.split(',').map(tag => tag.trim())],

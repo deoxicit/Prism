@@ -5,14 +5,15 @@ import { prismAbi } from '../../Contract/prism';
 import ArticleCard from '../components/Article/ArticleCard';
 import { useToast } from '@/components/ui/use-toast';
 import { useAccount } from 'wagmi';
-import { CONTRACT_ADDRESS } from '../constants';
+import { useContractAddress } from '../utils/contracts';
 
 const ArticleList: React.FC = () => {
   const { address } = useAccount();
   const { toast } = useToast();
+  const contractAddress = useContractAddress();
 
   const { data: allArticles, isLoading: isLoadingArticles, error: readError } = useReadContract({
-    address: CONTRACT_ADDRESS,
+    address: contractAddress,
     abi: prismAbi,
     functionName: 'listAllArticles',
   });
