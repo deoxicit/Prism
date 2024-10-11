@@ -3,6 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MoonIcon, SunIcon } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { Button } from '@/components/ui/button';
+import favicon from './assets/images/favicon-32x32.png'; // Adjust this path as needed
 
 interface LayoutProps {
   children: ReactNode;
@@ -17,12 +18,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <div className="container flex h-14 items-center">
           <div className="mr-4 hidden md:flex">
             <a className="mr-6 flex items-center space-x-2" href="/">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                <polyline points="2 17 12 22 22 17"/>
-                <polyline points="2 12 12 17 22 12"/>
-              </svg>
-              <span className="hidden font-bold sm:inline-block">Prism</span>
+             
+            <img src={favicon} alt="Prism Logo" className="h-6 w-6" />
             </a>
             <nav className="flex items-center space-x-6 text-sm font-medium">
               <a className="transition-colors hover:text-foreground/80 text-foreground/60" href="/articles">Articles</a>
