@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useReadContract } from 'wagmi';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { prismAbi } from '../../Contract/prism';
@@ -8,7 +8,7 @@ import { useAccount } from 'wagmi';
 import { useContractAddress } from '../utils/contracts';
 import { Button } from '@/components/ui/button';
 
-const ARTICLES_PER_PAGE = 21;
+const ARTICLES_PER_PAGE = 20;
 
 const ArticleList: React.FC = () => {
   const { address } = useAccount();
@@ -21,6 +21,11 @@ const ArticleList: React.FC = () => {
     abi: prismAbi,
     functionName: 'listAllArticles',
   });
+
+  const reversedArticles = useMemo(() => {
+    if (!allArticles) return [];
+    return [...allArticles].reverse();
+  }, [allArticles]);
 
   if (readError) {
     console.error('Read Contract Error:', readError);
@@ -35,10 +40,10 @@ const ArticleList: React.FC = () => {
     );
   }
 
-  const totalPages = allArticles ? Math.ceil(allArticles.length / ARTICLES_PER_PAGE) : 0;
+  const totalPages = reversedArticles ? Math.ceil(reversedArticles.length / ARTICLES_PER_PAGE) : 0;
   const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
   const endIndex = startIndex + ARTICLES_PER_PAGE;
-  const currentArticles = allArticles ? allArticles.slice(startIndex, endIndex) : [];
+  const currentArticles = reversedArticles.slice(startIndex, endIndex);
 
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
