@@ -1,11 +1,12 @@
-import React, { ErrorInfo, ReactNode } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Layout from './Layout';
-import CreateArticle from './pages/CreateArticle';
-import ArticleList from './pages/ArticleList';
-import ArticleDetailPage from './pages/ArticleDetailPage';
-import About from './pages/About';
+import React, { ErrorInfo, ReactNode } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Layout from "./Layout";
+import CreateArticle from "./pages/CreateArticle";
+import ArticleList from "./pages/ArticleList";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
+import About from "./pages/About";
 import { Toaster } from "@/components/ui/toaster";
+import MaintenancePage from "./pages/MaintanenceMode";
 
 class ErrorBoundary extends React.Component<
   { children: ReactNode },
@@ -34,11 +35,14 @@ class ErrorBoundary extends React.Component<
 }
 
 const App: React.FC = () => {
-  console.log('Rendering App component');
+  console.log("Rendering App component");
   return (
     <ErrorBoundary>
       <Router>
-        <Layout>
+        <Routes>
+          <Route path="/" element={<MaintenancePage />} />
+        </Routes>
+        {/* <Layout>
           <Routes>
             <Route path="/" element={<ArticleList />} />
             <Route path="/articles" element={<ArticleList />} />
@@ -46,7 +50,7 @@ const App: React.FC = () => {
             <Route path="/create" element={<CreateArticle />} />
             <Route path="/about" element={<About />} />
           </Routes>
-        </Layout>
+        </Layout> */}
         <Toaster />
       </Router>
     </ErrorBoundary>
