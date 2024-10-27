@@ -6,7 +6,7 @@ import ArticleList from "./pages/ArticleList";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
 import About from "./pages/About";
 import { Toaster } from "@/components/ui/toaster";
-import MaintenancePage from "./pages/MaintanenceMode";
+//import MaintenancePage from "./pages/MaintanenceMode";
 
 class ErrorBoundary extends React.Component<
   { children: ReactNode },
