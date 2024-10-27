@@ -10,7 +10,7 @@ remappings = [
 ]
 
 [rpc_endpoints]
-opencampuscodex = "https://linea-sepolia.infura.io/v3/d742656554e74d2a897b6139b0488b50"
+opencampuscodex = "https://rpc.open-campus-codex.gelato.digital"
 
 [etherscan]
 opencampuscodex = { key = "", url = "https://opencampus-codex.blockscout.com/api" }

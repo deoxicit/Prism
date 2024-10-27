@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { useReadContract } from 'wagmi';
-import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight, AlertCircle } from 'lucide-react';
 import { prismAbi } from '../../Contract/prism';
 import ArticleCard from '../components/Article/ArticleCard';
 import { useToast } from '@/components/ui/use-toast';
 import { useAccount } from 'wagmi';
 import { useContractAddress } from '../utils/contracts';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const ARTICLES_PER_PAGE = 20;
 
@@ -19,18 +20,13 @@ const ArticleList: React.FC = () => {
   const { data: allArticles, isLoading: isLoadingArticles, error: readError } = useReadContract({
     address: contractAddress,
     abi: prismAbi,
-    functionName: 'listAllArticles',
+    functionName: 'listAllArticles'
   });
 
   const reversedArticles = useMemo(() => {
     if (!allArticles) return [];
     return [...allArticles].reverse();
   }, [allArticles]);
-
-  if (readError) {
-    console.error('Read Contract Error:', readError);
-    return <div className="text-center text-red-600">Error loading articles. Please try again later.</div>;
-  }
 
   if (isLoadingArticles) {
     return (
@@ -40,7 +36,33 @@ const ArticleList: React.FC = () => {
     );
   }
 
-  const totalPages = reversedArticles ? Math.ceil(reversedArticles.length / ARTICLES_PER_PAGE) : 0;
+  if (readError) {
+    console.error('Read Contract Error:', readError);
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          There was an error loading the articles. This might be due to a large number of articles or a temporary network issue.
+          Please try again later or contact support if the problem persists.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (!allArticles || allArticles.length === 0) {
+    return (
+      <Alert>
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>No Articles</AlertTitle>
+        <AlertDescription>
+          There are currently no articles available. Check back later or be the first to publish an article!
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const totalPages = Math.ceil(reversedArticles.length / ARTICLES_PER_PAGE);
   const startIndex = (currentPage - 1) * ARTICLES_PER_PAGE;
   const endIndex = startIndex + ARTICLES_PER_PAGE;
   const currentArticles = reversedArticles.slice(startIndex, endIndex);
